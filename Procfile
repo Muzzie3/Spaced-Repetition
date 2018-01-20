@@ -1,2 +1,1 @@
-npm run build
-node node.js
+npm run start
