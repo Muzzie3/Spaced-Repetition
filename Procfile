@@ -1,2 +1,2 @@
 npm run build
-web: node node.js
+node node.js
