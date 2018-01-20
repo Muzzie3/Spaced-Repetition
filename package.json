@@ -13,6 +13,7 @@
     "eslint-plugin-react": "^7.5.1"
   },
   "scripts": {
+    "dev": "react-scripts start",
     "start": "react-scripts build; node node.js",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
