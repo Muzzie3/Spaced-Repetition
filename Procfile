@@ -1,1 +1,1 @@
-node node.js
+npm run build; node node.js
