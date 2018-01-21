@@ -1,16 +1,17 @@
 const express = require("express");
 const mysql = require("mysql");
-const dbURL = require("./databaseURL") || process.env.CLEARDB_DATABASE_URL;
+const { dbInfo } = require("./URLparser");
 
 express()
   .post("/api/createDeck/:user/:deck", (req, res) => {
-    const connection = mysql.createConnection(dbURL);
+    const connection = mysql.createConnection(dbInfo);
     connection.query(
-      `insert into decks values (${req.params.user}, ${req.params.deck})`,
-      "",
+      "INSERT INTO `decks` VALUES (?)",
+      [[req.params.user, req.params.deck]],
       err => (err ? res.status(500) : res.status(201)),
     );
+    connection.end();
   })
   .get("/api/:data", (req, res) => res.status(200).json({ testing: req.params.data }))
   .use(express.static("build"))
-  .listen(process.env.PORT || 3000);
+  .listen(process.env.PORT || 8080);
