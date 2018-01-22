@@ -2,16 +2,91 @@ const express = require("express");
 const mysql = require("mysql");
 const { dbInfo } = require("./URLparser");
 
+const pool = mysql.createPool({ connectionLimit: 5, ...dbInfo });
+
 express()
-  .post("/api/createDeck/:user/:deck", (req, res) => {
-    const connection = mysql.createConnection(dbInfo);
-    connection.query(
-      "INSERT INTO `decks` VALUES (?)",
-      [[req.params.user, req.params.deck]],
-      err => (err ? res.status(500) : res.status(201)),
-    );
-    connection.end();
+  .post("/api/createCard/:user/:deck/:front/:back", (req, res) => {
+    pool.getConnection((err0, connection) => {
+      connection.query(
+        "INSERT INTO `cards` (`user`, `deck`, `front`, `back`, `confidence`, `time`) VALUES (?)",
+        [
+          [
+            req.params.user.substr(0, 255),
+            req.params.deck.substr(0, 255),
+            req.params.front,
+            req.params.back,
+            0,
+            0,
+          ],
+        ],
+        (err1) => {
+          if (err1) res.status(500).send();
+          else res.status(201).send();
+          connection.release();
+        },
+      );
+    });
   })
-  .get("/api/:data", (req, res) => res.status(200).json({ testing: req.params.data }))
+  .patch("/api/updateCard/:id/:front/:back/:confidence/:time", (req, res) => {
+    pool.getConnection((err0, connection) => {
+      connection.query(
+        "UPDATE `cards` SET `front`=?, `back`=?, `confidence`=? `time`=? WHERE `id`=?",
+        [req.params.front, req.params.back, req.params.confidence, req.params.time, req.params.id],
+        (err1) => {
+          if (err1) res.status(500).send();
+          else res.status(200).send();
+          connection.release();
+        },
+      );
+    });
+  })
+  .get("/api/getDecks/:user", (req, res) => {
+    pool.getConnection((err0, connection) => {
+      connection.query(
+        "SELECT DISTINCT `deck` FROM `cards` WHERE `user`=?",
+        [[req.params.user.substr(0, 255)]],
+        (err1, results) => {
+          if (err1) res.status(500).send();
+          else res.status(200).json({ results });
+          connection.release();
+        },
+      );
+    });
+  })
+  .get("/api/getCards/:user/:deck", (req, res) => {
+    pool.getConnection((err0, connection) => {
+      connection.query(
+        "SELECT `id`, `front`, `back`, `confidence`, `time` FROM `cards` WHERE `user`=? AND `deck`=?",
+        [req.params.user.substr(0, 255), req.params.deck.substr(0, 255)],
+        (err1, results) => {
+          if (err1) res.status(500).send();
+          else res.status(200).json({ results });
+          connection.release();
+        },
+      );
+    });
+  })
+  .delete("/api/deleteCard/:id", (req, res) => {
+    pool.getConnection((err0, connection) => {
+      connection.query("DELETE FROM `cards` WHERE `id`=?", [req.params.id], (err1) => {
+        if (err1) res.status(500).send();
+        else res.status(200).send();
+        connection.release();
+      });
+    });
+  })
+  .delete("/api/deleteDeck/:user/:deck", (req, res) => {
+    pool.getConnection((err0, connection) => {
+      connection.query(
+        "DELETE FROM `cards` WHERE `user`=? AND `deck`=?",
+        [req.params.user.substr(0, 255), req.params.deck.substr(0, 255)],
+        (err1) => {
+          if (err1) res.status(500).send();
+          else res.status(200).send();
+          connection.release();
+        },
+      );
+    });
+  })
   .use(express.static("build"))
   .listen(process.env.PORT || 8080);
