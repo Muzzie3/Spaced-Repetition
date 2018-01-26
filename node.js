@@ -18,7 +18,7 @@ express()
               req.params.front,
               req.params.back,
               0,
-              0,
+              +new Date() / 1000,
             ],
           ],
           (err1) => {
@@ -33,7 +33,7 @@ express()
   .patch("/api/updateCard/:id/:front/:back/:confidence/:time", (req, res) => {
     pool.getConnection((err0, connection) => {
       connection.query(
-        "UPDATE `cards` SET `front`=?, `back`=?, `confidence`=? `time`=? WHERE `id`=?",
+        "UPDATE `cards` SET `front`=?, `back`=?, `confidence`=?, `time`=? WHERE `id`=?",
         [req.params.front, req.params.back, req.params.confidence, req.params.time, req.params.id],
         (err1) => {
           if (err1) res.status(500).send();

@@ -19,6 +19,6 @@
   grid-template-columns: 1fr 1fr 1fr;
 }
 
-.row {
-  padding-top: 50px;
+.explorer {
+  margin-top: 500px;
 }

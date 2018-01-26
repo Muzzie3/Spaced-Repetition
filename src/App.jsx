@@ -12,7 +12,7 @@ class App extends React.Component {
     idToken: null,
     decks: null,
     deck: null,
-    cards: null,
+    cards: [],
   };
 
   getDecks = (idToken = this.state.idToken) => {
@@ -33,13 +33,15 @@ class App extends React.Component {
     xhr.send();
     xhr.addEventListener("load", () => {
       if (xhr.status === 200) {
-        this.setState({ cards: JSON.parse(xhr.responseText).results });
+        this.setState({
+          cards: JSON.parse(xhr.responseText).results.sort((a, b) => a.time - b.time),
+        });
       }
     });
     this.setState({ deck, cards: [] });
   };
 
-  createCard = (front = "placeholder", back = "placeholder", deck = "placeholder") => {
+  createCard = (front, back, deck) => {
     const xhr = new XMLHttpRequest();
     xhr.open(
       "POST",
@@ -49,12 +51,27 @@ class App extends React.Component {
     xhr.addEventListener("load", () => this.getDecks());
   };
 
+  deleteDeck = (idToken = this.state.idToken, deck) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("DELETE", `${window.location.origin}/api/deleteDeck/${idToken}/${deck}`);
+    xhr.send();
+    xhr.addEventListener("load", () => {
+      if (xhr.status === 200) {
+        this.getDecks();
+      }
+    });
+    this.setState({ decks: [] });
+  };
+
   signIn = (googleUser) => {
     this.getDecks(googleUser.getAuthResponse().id_token);
     this.setState({ idToken: googleUser.getAuthResponse().id_token });
   };
 
-  back = () => this.setState({ deck: null, cards: null });
+  back = () => {
+    this.setState({ deck: null, cards: [] });
+    this.getDecks();
+  };
 
   render = () => (
     <div className="App">
@@ -66,14 +83,23 @@ class App extends React.Component {
         <div>
           {!this.state.idToken ? (
             <div className="g-signin2" data-theme="dark" data-onsuccess="signIn" />
-          ) : !this.state.deck ? (
+          ) : this.state.deck && this.state.cards.length ? (
+            <DeckDisplay
+              back={this.back}
+              deck={this.state.deck}
+              cards={this.state.cards}
+              refresh={() => {
+                this.getCards();
+                this.getDecks();
+              }}
+              createCard={this.createCard}
+            />
+          ) : (
             <DeckSelection
               decks={this.state.decks}
               createDeck={deck => this.createCard("placeholder", "placeholder", deck)}
               getDeck={deck => this.getCards(this.state.idToken, deck)}
             />
-          ) : (
-            <DeckDisplay back={this.back} cards={this.state.cards} />
           )}
         </div>
         <div />
