@@ -1,6 +1,6 @@
 import React from "react";
 import DeckSelection from "./DeckSelection";
-import CardDisplay from "./CardDisplay";
+import DeckDisplay from "./DeckDisplay";
 
 class App extends React.Component {
   constructor() {
@@ -9,31 +9,37 @@ class App extends React.Component {
   }
 
   state = {
-    idToken: false,
+    idToken: null,
     decks: null,
     deck: null,
     cards: null,
-    cardId: null,
   };
 
-  getDecks = (token = this.state.idToken) => {
+  getDecks = (idToken = this.state.idToken) => {
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", `${window.location.origin}/api/getDecks/${token}`);
+    xhr.open("GET", `${window.location.origin}/api/getDecks/${idToken}`);
     xhr.send();
     xhr.addEventListener("load", () => {
       if (xhr.status === 200) {
-        this.setState({ decks: JSON.parse(xhr.responseText).results });
+        this.setState({ decks: JSON.parse(xhr.responseText).results.map(obj => obj.deck) });
       }
     });
     this.setState({ decks: [] });
   };
 
-  signIn = (googleUser) => {
-    this.getDecks(googleUser.getAuthResponse().id_token);
-    this.setState({ idToken: googleUser.getAuthResponse().id_token });
+  getCards = (idToken = this.state.idToken, deck = this.state.deck) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("GET", `${window.location.origin}/api/getCards/${idToken}/${deck}`);
+    xhr.send();
+    xhr.addEventListener("load", () => {
+      if (xhr.status === 200) {
+        this.setState({ cards: JSON.parse(xhr.responseText).results });
+      }
+    });
+    this.setState({ deck, cards: [] });
   };
 
-  cardCreator = (front = "placeholder", back = "placeholder", deck = "placeholder") => {
+  createCard = (front = "placeholder", back = "placeholder", deck = "placeholder") => {
     const xhr = new XMLHttpRequest();
     xhr.open(
       "POST",
@@ -42,6 +48,13 @@ class App extends React.Component {
     xhr.send();
     xhr.addEventListener("load", () => this.getDecks());
   };
+
+  signIn = (googleUser) => {
+    this.getDecks(googleUser.getAuthResponse().id_token);
+    this.setState({ idToken: googleUser.getAuthResponse().id_token });
+  };
+
+  back = () => this.setState({ deck: null, cards: null });
 
   render = () => (
     <div className="App">
@@ -54,9 +67,13 @@ class App extends React.Component {
           {!this.state.idToken ? (
             <div className="g-signin2" data-theme="dark" data-onsuccess="signIn" />
           ) : !this.state.deck ? (
-            <DeckSelection decks={this.state.decks} onClick={this.cardCreator} />
+            <DeckSelection
+              decks={this.state.decks}
+              createDeck={deck => this.createCard("placeholder", "placeholder", deck)}
+              getDeck={deck => this.getCards(this.state.idToken, deck)}
+            />
           ) : (
-            <CardDisplay card={this.state.cards[this.state.cardId]} />
+            <DeckDisplay back={this.back} cards={this.state.cards} />
           )}
         </div>
         <div />
