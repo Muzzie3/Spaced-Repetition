@@ -1,4 +1,4 @@
-const dbURL = process.env.CLEARDB_DATABASE_URL || require("./databaseURL").URL;
+const dbURL = process.env.CLEARDB_DATABASE_URL || require("./secrets").DBURL;
 
 module.exports.dbInfo = {
   user: dbURL.split("//")[1].split(":")[0],

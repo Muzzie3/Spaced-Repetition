@@ -8,6 +8,7 @@
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.5.1",
     "express": "^4.16.2",
+    "google-auth-library": "^1.1.0",
     "mysql": "^2.15.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
@@ -19,5 +20,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  }
+  },
+  "proxy": "http://localhost:8080"
 }
