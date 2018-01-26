@@ -82,20 +82,5 @@ express()
       });
     });
   })
-  .delete("/api/deleteDeck/:user/:deck", (req, res) => {
-    OAuth(req.params.user, (user) => {
-      pool.getConnection((err0, connection) => {
-        connection.query(
-          "DELETE FROM `cards` WHERE `user`=? AND `deck`=?",
-          [user.substr(0, 255), req.params.deck.substr(0, 255)],
-          (err1) => {
-            if (err1) res.status(500).send();
-            else res.status(200).send();
-            connection.release();
-          },
-        );
-      });
-    });
-  })
   .use(express.static("build"))
   .listen(process.env.PORT || 8080);
