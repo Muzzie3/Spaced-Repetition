@@ -3,6 +3,10 @@ import CardDisplay from "./CardDisplay";
 import DeckExplorer from "./DeckExplorer";
 
 class DeckDisplay extends React.Component {
+  static studying = true;
+
+  state = { studying: DeckDisplay.studying };
+
   updateCard = (id, front, back, confidence, time) => {
     const xhr = new XMLHttpRequest();
     xhr.open(
@@ -20,16 +24,16 @@ class DeckDisplay extends React.Component {
     xhr.addEventListener("load", this.props.refresh);
   };
 
+  flipView = () => this.setState({ studying: (DeckDisplay.studying = !DeckDisplay.studying) });
+
   render = () => (
     <div>
       <button onClick={this.props.back}>Back</button>
-      {this.props.training ? (
+      {this.state.studying ? (
         <CardDisplay
           card={this.props.cards[0] || {}}
           updateCard={this.updateCard}
-          toDeckExplorer={this.props.flipTraining}
-          forceStudy={this.props.forceStudy}
-          flipForceStudy={this.props.flipForceStudy}
+          toDeckExplorer={this.flipView}
         />
       ) : (
         <DeckExplorer
@@ -40,7 +44,7 @@ class DeckDisplay extends React.Component {
           }}
           updateCard={this.updateCard}
           deleteCard={this.deleteCard}
-          toTraining={this.props.flipTraining}
+          toTraining={this.flipView}
         />
       )}
     </div>

@@ -1,7 +1,9 @@
 import React from "react";
 
 class CardDisplay extends React.Component {
-  state = { front: true };
+  static forceStudy = false;
+
+  state = { front: true, forceStudy: CardDisplay.forceStudy };
 
   updateCard = (confidence, time) => {
     this.setState({ front: true });
@@ -14,18 +16,23 @@ class CardDisplay extends React.Component {
     );
   };
 
+  flip = () => this.setState({ front: false });
+
+  flipForceStudy = () =>
+    this.setState({ forceStudy: (CardDisplay.forceStudy = !CardDisplay.forceStudy) });
+
   render = () => (
     <div>
       <button onClick={this.props.toDeckExplorer}>View Deck</button>
-      {+new Date() / 1000 < this.props.card.time && !this.props.forceStudy ? (
+      {+new Date() / 1000 < this.props.card.time && !this.state.forceStudy ? (
         <div>
           <div>No studying currently required</div>
-          <button onClick={this.props.flipForceStudy}>Study anyway</button>
+          <button onClick={this.flipForceStudy}>Study anyway</button>
         </div>
       ) : this.state.front ? (
         <div>
           <div>{this.props.card.front}</div>
-          <button onClick={() => this.setState({ front: false })}>Flip</button>
+          <button onClick={this.flip}>Flip</button>
         </div>
       ) : (
         <div>
@@ -55,8 +62,8 @@ class CardDisplay extends React.Component {
           </button>
         </div>
       )}{" "}
-      {this.props.forceStudy ? (
-        <button onClick={this.props.flipForceStudy}>Back to normal studying routine</button>
+      {this.state.forceStudy ? (
+        <button onClick={this.flipForceStudy}>Back to normal studying routine</button>
       ) : (
         <div />
       )}

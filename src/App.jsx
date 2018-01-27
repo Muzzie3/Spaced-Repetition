@@ -13,8 +13,6 @@ class App extends React.Component {
     decks: null,
     deck: null,
     cards: [],
-    forceStudy: false,
-    training: true,
   };
 
   getDecks = (idToken = this.state.idToken) => {
@@ -50,18 +48,14 @@ class App extends React.Component {
       `${window.location.origin}/api/createCard/${this.state.idToken}/${deck}/${front}/${back}`,
     );
     xhr.send();
-    xhr.addEventListener("load", () => this.getDecks());
+    xhr.addEventListener("load", this.refresh);
   };
 
   deleteDeck = (idToken = this.state.idToken, deck) => {
     const xhr = new XMLHttpRequest();
     xhr.open("DELETE", `${window.location.origin}/api/deleteDeck/${idToken}/${deck}`);
     xhr.send();
-    xhr.addEventListener("load", () => {
-      if (xhr.status === 200) {
-        this.getDecks();
-      }
-    });
+    xhr.addEventListener("load", this.refresh);
     this.setState({ decks: [] });
   };
 
@@ -76,13 +70,9 @@ class App extends React.Component {
   };
 
   refresh = () => {
-    this.getCards();
     this.getDecks();
+    if (this.state.deck) this.getCards();
   };
-
-  flipTraining = () => this.setState({ training: !this.state.training });
-
-  flipForceStudy = () => this.setState({ forceStudy: !this.state.forceStudy });
 
   render = () => (
     <div className="App">
@@ -101,10 +91,6 @@ class App extends React.Component {
               cards={this.state.cards}
               refresh={this.refresh}
               createCard={this.createCard}
-              training={this.state.training}
-              forceStudy={this.state.forceStudy}
-              flipTraining={this.flipTraining}
-              flipForceStudy={this.flipForceStudy}
             />
           ) : (
             <DeckSelection
