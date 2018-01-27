@@ -6,7 +6,7 @@ const { OAuth } = require("./OAuthValidator");
 const pool = mysql.createPool({ connectionLimit: 5, ...dbInfo });
 
 express()
-  .post("/api/createCard/:user/:deck/:front/:back", (req, res) => {
+  .post("/api/createCard/:deck/:front/:back/:user", (req, res) => {
     OAuth(req.params.user, (user) => {
       pool.getConnection((err0, connection) => {
         connection.query(
@@ -17,7 +17,7 @@ express()
               req.params.deck.substr(0, 255),
               req.params.front,
               req.params.back,
-              0,
+              1,
               +new Date() / 1000,
             ],
           ],
@@ -58,7 +58,7 @@ express()
       });
     });
   })
-  .get("/api/getCards/:user/:deck", (req, res) => {
+  .get("/api/getCards/:deck/:user", (req, res) => {
     OAuth(req.params.user, (user) => {
       pool.getConnection((err0, connection) => {
         connection.query(

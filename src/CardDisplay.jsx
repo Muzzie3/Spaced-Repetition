@@ -3,10 +3,12 @@ import React from "react";
 class CardDisplay extends React.Component {
   static forceStudy = false;
 
-  state = { front: true, forceStudy: CardDisplay.forceStudy };
+  state = {
+    front: true,
+    forceStudy: CardDisplay.forceStudy && +new Date() / 1000 < this.props.card.time,
+  };
 
   updateCard = (confidence, time) => {
-    this.setState({ front: true });
     this.props.updateCard(
       this.props.card.id,
       this.props.card.front,
@@ -40,8 +42,10 @@ class CardDisplay extends React.Component {
           <button
             onClick={() =>
               this.updateCard(
-                this.props.card.confidence + 1,
-                Math.round((+new Date() + 10000 * (this.props.card.confidence + 1) ** 4) / 1000),
+                this.props.card.confidence + +!this.state.forceStudy,
+                Math.round((+new Date() +
+                    10000 * (this.props.card.confidence + +!this.state.forceStudy) ** 4) /
+                    1000),
               )
             }
           >
@@ -57,11 +61,13 @@ class CardDisplay extends React.Component {
           >
             somewhat
           </button>
-          <button onClick={() => Math.round(this.props.updateCard(0, +new Date() / 1000))}>
+          <button
+            onClick={() => Math.round(this.props.updateCard(1, (+new Date() + 10000) / 1000))}
+          >
             poorly
           </button>
         </div>
-      )}{" "}
+      )}
       {this.state.forceStudy ? (
         <button onClick={this.flipForceStudy}>Back to normal studying routine</button>
       ) : (

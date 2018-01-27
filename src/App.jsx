@@ -1,6 +1,6 @@
 import React from "react";
 import DeckSelection from "./DeckSelection";
-import DeckDisplay from "./DeckDisplay";
+import Display from "./Display";
 
 class App extends React.Component {
   constructor() {
@@ -11,11 +11,12 @@ class App extends React.Component {
   state = {
     idToken: null,
     decks: null,
-    deck: null,
     cards: [],
   };
 
-  getDecks = (idToken = this.state.idToken) => {
+  deck = null;
+
+  readDecks = (idToken = this.state.idToken) => {
     const xhr = new XMLHttpRequest();
     xhr.open("GET", `${window.location.origin}/api/getDecks/${idToken}`);
     xhr.send();
@@ -27,9 +28,10 @@ class App extends React.Component {
     this.setState({ decks: [] });
   };
 
-  getCards = (idToken = this.state.idToken, deck = this.state.deck) => {
+  readCards = (deck = this.deck) => {
+    this.deck = deck;
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", `${window.location.origin}/api/getCards/${idToken}/${deck}`);
+    xhr.open("GET", `${window.location.origin}/api/getCards/${this.deck}/${this.state.idToken}`);
     xhr.send();
     xhr.addEventListener("load", () => {
       if (xhr.status === 200) {
@@ -38,40 +40,41 @@ class App extends React.Component {
         });
       }
     });
-    this.setState({ deck, cards: [] });
+    this.setState({ cards: [] });
   };
 
-  createCard = (front, back, deck) => {
+  createDeck = (deck) => {
     const xhr = new XMLHttpRequest();
     xhr.open(
       "POST",
-      `${window.location.origin}/api/createCard/${this.state.idToken}/${deck}/${front}/${back}`,
+      `${window.location.origin}/api/createCard/${deck}/placeholder/placeholder/${
+        this.state.idToken
+      }`,
     );
     xhr.send();
-    xhr.addEventListener("load", this.refresh);
+    xhr.addEventListener("load", () => this.readDecks());
   };
 
-  deleteDeck = (idToken = this.state.idToken, deck) => {
+  createCard = (front, back) => {
     const xhr = new XMLHttpRequest();
-    xhr.open("DELETE", `${window.location.origin}/api/deleteDeck/${idToken}/${deck}`);
+    xhr.open(
+      "POST",
+      `${window.location.origin}/api/createCard/${this.deck}/${front}/${back}/${
+        this.state.idToken
+      }`,
+    );
     xhr.send();
-    xhr.addEventListener("load", this.refresh);
-    this.setState({ decks: [] });
+    xhr.addEventListener("load", () => this.readCards());
   };
 
   signIn = (googleUser) => {
-    this.getDecks(googleUser.getAuthResponse().id_token);
+    this.readDecks(googleUser.getAuthResponse().id_token);
     this.setState({ idToken: googleUser.getAuthResponse().id_token });
   };
 
-  back = () => {
-    this.setState({ deck: null, cards: [] });
-    this.getDecks();
-  };
-
   refresh = () => {
-    this.getDecks();
-    if (this.state.deck) this.getCards();
+    this.readDecks();
+    this.readCards();
   };
 
   render = () => (
@@ -80,27 +83,23 @@ class App extends React.Component {
         <h1 className="App-title">Spaced Repetition</h1>
       </header>
       <div className="App-intro">
-        <div />
-        <div>
-          {!this.state.idToken ? (
-            <div className="g-signin2" data-theme="dark" data-onsuccess="signIn" />
-          ) : this.state.deck && this.state.cards.length ? (
-            <DeckDisplay
-              back={this.back}
-              deck={this.state.deck}
-              cards={this.state.cards}
-              refresh={this.refresh}
-              createCard={this.createCard}
-            />
-          ) : (
-            <DeckSelection
-              decks={this.state.decks}
-              createDeck={deck => this.createCard("placeholder", "placeholder", deck)}
-              getDeck={deck => this.getCards(this.state.idToken, deck)}
-            />
-          )}
-        </div>
-        <div />
+        {!this.state.idToken ? (
+          <div className="g-signin2" data-theme="dark" data-onsuccess="signIn" />
+        ) : this.state.cards.length ? (
+          <Display
+            back={() => this.setState({ cards: [] })}
+            cards={this.state.cards}
+            refresh={this.refresh}
+            refreshCards={() => this.readCards()}
+            createCard={this.createCard}
+          />
+        ) : (
+          <DeckSelection
+            decks={this.state.decks}
+            createDeck={this.createDeck}
+            getDeck={this.readCards}
+          />
+        )}
       </div>
     </div>
   );
