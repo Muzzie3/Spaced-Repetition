@@ -16,7 +16,7 @@
 .App-intro {
   font-size: large;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr;
 }
 
 .explorer {

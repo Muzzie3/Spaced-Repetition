@@ -16,7 +16,9 @@ class CardDisplay extends React.Component {
 
   render = () => (
     <div>
-      {this.state.front ? (
+      {+new Date() / 1000 < this.props.card.time ? (
+        <div>No studying currently required</div>
+      ) : this.state.front ? (
         <div>
           <div>{this.props.card.front}</div>
           <button onClick={() => this.setState({ front: false })}>Flip</button>

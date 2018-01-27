@@ -6,4 +6,4 @@ const client = new OAuth2Client(
   clientSecret,
 );
 module.exports.OAuth = (tokenString, callback) =>
-  client.verifyIdToken({ idToken: tokenString }, (err1, login) => callback(login.getPayload().sub));
+  client.verifyIdToken({ idToken: tokenString }, (err, login) => callback(login.getPayload().sub));
