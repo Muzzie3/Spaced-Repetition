@@ -1,7 +1,8 @@
 import React from "react";
 
 const DeckExplorer = props => (
-  <div className="explorer">
+  <div>
+    <button onClick={props.toTraining}>Train</button>
     {props.cards.map(card => (
       <div key={card.id}>
         <div>

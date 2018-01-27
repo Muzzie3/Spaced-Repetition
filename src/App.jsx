@@ -13,6 +13,8 @@ class App extends React.Component {
     decks: null,
     deck: null,
     cards: [],
+    forceStudy: false,
+    training: true,
   };
 
   getDecks = (idToken = this.state.idToken) => {
@@ -73,6 +75,15 @@ class App extends React.Component {
     this.getDecks();
   };
 
+  refresh = () => {
+    this.getCards();
+    this.getDecks();
+  };
+
+  flipTraining = () => this.setState({ training: !this.state.training });
+
+  flipForceStudy = () => this.setState({ forceStudy: !this.state.forceStudy });
+
   render = () => (
     <div className="App">
       <header className="App-header">
@@ -88,11 +99,12 @@ class App extends React.Component {
               back={this.back}
               deck={this.state.deck}
               cards={this.state.cards}
-              refresh={() => {
-                this.getCards();
-                this.getDecks();
-              }}
+              refresh={this.refresh}
               createCard={this.createCard}
+              training={this.state.training}
+              forceStudy={this.state.forceStudy}
+              flipTraining={this.flipTraining}
+              flipForceStudy={this.flipForceStudy}
             />
           ) : (
             <DeckSelection

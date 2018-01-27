@@ -18,7 +18,3 @@
   display: grid;
   grid-template-columns: 1fr;
 }
-
-.explorer {
-  margin-top: 500px;
-}

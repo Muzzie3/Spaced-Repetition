@@ -16,8 +16,12 @@ class CardDisplay extends React.Component {
 
   render = () => (
     <div>
-      {+new Date() / 1000 < this.props.card.time ? (
-        <div>No studying currently required</div>
+      <button onClick={this.props.toDeckExplorer}>View Deck</button>
+      {+new Date() / 1000 < this.props.card.time && !this.props.forceStudy ? (
+        <div>
+          <div>No studying currently required</div>
+          <button onClick={this.props.flipForceStudy}>Study anyway</button>
+        </div>
       ) : this.state.front ? (
         <div>
           <div>{this.props.card.front}</div>
@@ -50,6 +54,11 @@ class CardDisplay extends React.Component {
             poorly
           </button>
         </div>
+      )}{" "}
+      {this.props.forceStudy ? (
+        <button onClick={this.props.flipForceStudy}>Back to normal studying routine</button>
+      ) : (
+        <div />
       )}
     </div>
   );

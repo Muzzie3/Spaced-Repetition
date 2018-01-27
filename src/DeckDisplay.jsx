@@ -23,19 +23,26 @@ class DeckDisplay extends React.Component {
   render = () => (
     <div>
       <button onClick={this.props.back}>Back</button>
-      <CardDisplay
-        card={this.props.cards[0] || {}}
-        updateCard={this.updateCard}
-      />
-      <DeckExplorer
-        cards={this.props.cards}
-        createCard={(front, back) => {
-          this.props.createCard(front, back, this.props.deck);
-          this.props.refresh();
-        }}
-        updateCard={this.updateCard}
-        deleteCard={this.deleteCard}
-      />
+      {this.props.training ? (
+        <CardDisplay
+          card={this.props.cards[0] || {}}
+          updateCard={this.updateCard}
+          toDeckExplorer={this.props.flipTraining}
+          forceStudy={this.props.forceStudy}
+          flipForceStudy={this.props.flipForceStudy}
+        />
+      ) : (
+        <DeckExplorer
+          cards={this.props.cards}
+          createCard={(front, back) => {
+            this.props.createCard(front, back, this.props.deck);
+            this.props.refresh();
+          }}
+          updateCard={this.updateCard}
+          deleteCard={this.deleteCard}
+          toTraining={this.props.flipTraining}
+        />
+      )}
     </div>
   );
 }
