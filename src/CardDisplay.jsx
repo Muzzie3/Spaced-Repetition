@@ -62,7 +62,7 @@ class CardDisplay extends React.Component {
             somewhat
           </button>
           <button
-            onClick={() => Math.round(this.props.updateCard(1, (+new Date() + 10000) / 1000))}
+            onClick={() => Math.round(this.updateCard(1, (+new Date() + 10000) / 1000))}
           >
             poorly
           </button>
