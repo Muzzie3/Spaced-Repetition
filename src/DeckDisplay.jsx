@@ -38,10 +38,7 @@ class DeckDisplay extends React.Component {
       ) : (
         <DeckExplorer
           cards={this.props.cards}
-          createCard={(front, back) => {
-            this.props.createCard(front, back, this.props.deck);
-            this.props.refresh();
-          }}
+          createCard={(front, back) => this.props.createCard(front, back, this.props.deck)}
           updateCard={this.updateCard}
           deleteCard={this.deleteCard}
           toTraining={this.flipView}
