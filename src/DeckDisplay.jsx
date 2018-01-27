@@ -13,10 +13,8 @@ const DeckDisplay = props => (
     </button>
     {props.cards.map(card => (
       <div key={card.id}>
-        <div>
           {`Front: ${card.front} Back: ${card.back} Level: ${card.confidence} Time: ${new Date(card.time * 1000).toLocaleString()}`}
           <button onClick={() => props.deleteCard(card.id)}>Delete</button>
-        </div>
       </div>
     ))}
   </div>
