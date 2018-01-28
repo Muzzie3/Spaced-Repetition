@@ -6,6 +6,13 @@ const { OAuth } = require("./OAuthValidator");
 const pool = mysql.createPool({ connectionLimit: 5, ...dbInfo });
 
 express()
+  .use((req, res, next) => {
+    if (process.env.NODE_ENV === "production" && req.headers["x-forwarded-proto"] !== "https") {
+      res.redirect(302, `https://${req.hostname}${req.originalUrl}`);
+    } else {
+      next();
+    }
+  })
   .post("/api/createCard/:deck/:front/:back/:user", (req, res) => {
     OAuth(req.params.user, (user) => {
       pool.getConnection((err0, connection) => {
