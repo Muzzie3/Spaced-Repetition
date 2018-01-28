@@ -25,21 +25,38 @@ class CardDisplay extends React.Component {
 
   render = () => (
     <div>
-      <button onClick={this.props.toDeckExplorer}>View Deck</button>
       {+new Date() / 1000 < this.props.card.time && !this.state.forceStudy ? (
         <div>
-          <div>No studying currently required</div>
-          <button onClick={this.flipForceStudy}>Study anyway</button>
+          <div style={{ marginBottom: "40px" }}>No studying currently required</div>
+          <button onClick={this.flipForceStudy}>Study anyway (not recommended)</button>
         </div>
       ) : this.state.front ? (
-        <div>
+        <button className="Card" onClick={this.flip}>
           <div>{this.props.card.front}</div>
-          <button onClick={this.flip}>Flip</button>
-        </div>
+        </button>
       ) : (
         <div>
-          <div>{this.props.card.back}</div> I remember this...
+          <span className="Card">{this.props.card.back}</span>
+          <br /> I remember this... <br />
           <button
+            style={{ backgroundColor: "indianred" }}
+            onClick={() => Math.round(this.updateCard(1, (+new Date() + 10000) / 1000))}
+          >
+            poorly
+          </button>
+          <button
+            style={{ backgroundColor: "orange", margin: "1%" }}
+            onClick={() =>
+              this.updateCard(
+                this.props.card.confidence,
+                Math.round((+new Date() + 10000 * this.props.card.confidence ** 4) / 1000),
+              )
+            }
+          >
+            somewhat
+          </button>
+          <button
+            style={{ backgroundColor: "limegreen" }}
             onClick={() =>
               this.updateCard(
                 this.props.card.confidence + +!this.state.forceStudy,
@@ -51,25 +68,13 @@ class CardDisplay extends React.Component {
           >
             well
           </button>
-          <button
-            onClick={() =>
-              this.updateCard(
-                this.props.card.confidence,
-                Math.round((+new Date() + 10000 * this.props.card.confidence ** 4) / 1000),
-              )
-            }
-          >
-            somewhat
-          </button>
-          <button
-            onClick={() => Math.round(this.updateCard(1, (+new Date() + 10000) / 1000))}
-          >
-            poorly
-          </button>
         </div>
       )}
       {this.state.forceStudy ? (
-        <button onClick={this.flipForceStudy}>Back to normal studying routine</button>
+        <div>
+          <br />
+          <button onClick={this.flipForceStudy}>Back to normal studying routine</button>
+        </div>
       ) : (
         <div />
       )}

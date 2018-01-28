@@ -1,12 +1,14 @@
 .App {
   text-align: center;
+  background-color: #f0f0f0;
 }
 
 .App-header {
   background-color: #222;
-  height: 150px;
+  height: 20%;
   padding: 20px;
   color: white;
+  margin-bottom: 2%;
 }
 
 .App-title {
@@ -15,6 +17,47 @@
 
 .App-intro {
   font-size: large;
+}
+
+.Display {
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 3fr;
+}
+
+button {
+  padding: 15px 15px;
+  border-radius: 20px;
+  background-color: lightblue;
+}
+
+.g-signin2 {
+  margin-left: calc(50% - 75px);
+}
+
+.Card, .Card-editor, .Deck-selection button {
+  display: inline-block;
+  box-sizing: content-box;
+  background-color: #ffffff;
+  border: 2px solid gray;
+  border-radius: 20px;
+  width: 80%;
+  text-overflow: ellipsis;
+  padding: 20px 20px;
+  color: #222;
+  font-size: large;
+  margin: 5px;
+}
+
+.Card-editor {
+  margin-bottom: 30px;
+}
+
+button.Card:hover {
+  background-image: url("./RefreshIcon.png");
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+.Deck-selection button:hover, .Card-editor:hover {
+  border-color: black;
 }

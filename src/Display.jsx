@@ -27,21 +27,21 @@ class Display extends React.Component {
   flipView = () => this.setState({ studying: (Display.studying = !Display.studying) });
 
   render = () => (
-    <div>
-      <button onClick={this.props.back}>Back</button>
+    <div className="Display">
+      <div>
+        <button style={{ marginBottom: "40px" }} onClick={this.props.back}>Back</button> <br />
+        <button onClick={() => this.setState({ studying: (Display.studying = !Display.studying) })}>
+          {this.state.studying ? "View Deck" : "Study"}
+        </button>
+      </div>
       {this.state.studying ? (
-        <CardDisplay
-          card={this.props.cards[0] || {}}
-          updateCard={this.updateCard}
-          toDeckExplorer={this.flipView}
-        />
+        <CardDisplay card={this.props.cards[0] || {}} updateCard={this.updateCard} />
       ) : (
         <DeckDisplay
           cards={this.props.cards}
           createCard={this.props.createCard}
           updateCard={this.updateCard}
           deleteCard={this.deleteCard}
-          toTraining={this.flipView}
         />
       )}
     </div>
