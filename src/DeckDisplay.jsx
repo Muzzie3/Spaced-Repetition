@@ -3,24 +3,21 @@ import React from "react";
 const DeckDisplay = props => (
   <div>
     <button
-      className="Card-editor"
+      className="Green-button"
       onClick={() => props.createCard(window.prompt("Front"), window.prompt("Back"))}
     >
       Create new card
     </button>
+    <br />
     {props.cards.map(card => (
-      <div key={card.id} style={{ border: "2px solid black", margin: "5px" }}>
+      <div className="Card-displayer" key={card.id}>
         <div>
           {`Level: ${card.confidence}`} <br />{" "}
           {`Time: ${new Date(card.time * 1000).toLocaleString()}`}
-          <div>
-            <button
-              style={{ backgroundColor: "indianred" }}
-              onClick={() => props.deleteCard(card.id)}
-            >
-              Delete
-            </button>
-          </div>
+          <br />
+          <button className="Red-button" onClick={() => props.deleteCard(card.id)}>
+            Delete
+          </button>
         </div>
         <button
           className="Card-editor"
@@ -33,7 +30,6 @@ const DeckDisplay = props => (
               card.time,
             )
           }
-          style={{ marginBottom: "5px" }}
         >
           {card.front}
         </button>

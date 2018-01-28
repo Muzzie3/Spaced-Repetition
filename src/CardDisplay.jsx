@@ -36,16 +36,17 @@ class CardDisplay extends React.Component {
         </button>
       ) : (
         <div>
-          <span className="Card">{this.props.card.back}</span>
+          <div className="Card">{this.props.card.back}</div>
           <br /> I remember this... <br />
           <button
-            style={{ backgroundColor: "indianred" }}
+            className="Red-button"
             onClick={() => Math.round(this.updateCard(1, (+new Date() + 10000) / 1000))}
           >
             poorly
           </button>
           <button
-            style={{ backgroundColor: "orange", margin: "1%" }}
+            className="Yellow-button"
+            style={{ margin: "1%" }}
             onClick={() =>
               this.updateCard(
                 this.props.card.confidence,
@@ -56,7 +57,7 @@ class CardDisplay extends React.Component {
             somewhat
           </button>
           <button
-            style={{ backgroundColor: "limegreen" }}
+            className="Green-button"
             onClick={() =>
               this.updateCard(
                 this.props.card.confidence + +!this.state.forceStudy,

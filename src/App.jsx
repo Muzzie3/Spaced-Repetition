@@ -10,6 +10,7 @@ class App extends React.Component {
 
   state = {
     idToken: null,
+    loading: false,
     decks: null,
     cards: [],
   };
@@ -22,10 +23,13 @@ class App extends React.Component {
     xhr.send();
     xhr.addEventListener("load", () => {
       if (xhr.status === 200) {
-        this.setState({ decks: JSON.parse(xhr.responseText).results.map(obj => obj.deck) });
+        this.setState({
+          loading: false,
+          decks: JSON.parse(xhr.responseText).results.map(obj => obj.deck),
+        });
       }
     });
-    this.setState({ decks: [] });
+    this.setState({ loading: true, decks: [] });
   };
 
   readCards = (deck = this.deck) => {
@@ -36,11 +40,12 @@ class App extends React.Component {
     xhr.addEventListener("load", () => {
       if (xhr.status === 200) {
         this.setState({
+          loading: false,
           cards: JSON.parse(xhr.responseText).results.sort((a, b) => a.time - b.time),
         });
       }
     });
-    this.setState({ cards: [] });
+    this.setState({ loading: true, cards: [] });
   };
 
   createDeck = (deck) => {
@@ -82,25 +87,25 @@ class App extends React.Component {
       <header className="App-header">
         <h1 className="App-title">Spaced Repetition</h1>
       </header>
-      <div className="App-intro">
-        {!this.state.idToken ? (
-          <div className="g-signin2" data-theme="dark" data-onsuccess="signIn" />
-        ) : this.state.cards.length ? (
-          <Display
-            back={() => this.setState({ cards: [] })}
-            cards={this.state.cards}
-            refresh={this.refresh}
-            refreshCards={() => this.readCards()}
-            createCard={this.createCard}
-          />
-        ) : (
-          <DeckSelection
-            decks={this.state.decks}
-            createDeck={this.createDeck}
-            getDeck={this.readCards}
-          />
-        )}
-      </div>
+      {this.state.loading ? (
+        "Loading..."
+      ) : !this.state.idToken ? (
+        <div className="g-signin2" data-theme="dark" data-onsuccess="signIn" />
+      ) : this.state.cards.length ? (
+        <Display
+          back={() => this.setState({ cards: [] })}
+          cards={this.state.cards}
+          refresh={this.refresh}
+          refreshCards={() => this.readCards()}
+          createCard={this.createCard}
+        />
+      ) : (
+        <DeckSelection
+          decks={this.state.decks}
+          createDeck={this.createDeck}
+          getDeck={this.readCards}
+        />
+      )}
     </div>
   );
 }
