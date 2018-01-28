@@ -14,13 +14,43 @@ const DeckDisplay = props => (
           {`Level: ${card.confidence}`} <br />{" "}
           {`Time: ${new Date(card.time * 1000).toLocaleString()}`}
           <div>
-            <button style={{ backgroundColor: "indianred" }} onClick={() => props.deleteCard(card.id)}>Delete</button>
+            <button
+              style={{ backgroundColor: "indianred" }}
+              onClick={() => props.deleteCard(card.id)}
+            >
+              Delete
+            </button>
           </div>
         </div>
-        <button className="Card-editor" style={{ marginBottom: "5px" }}>
+        <button
+          className="Card-editor"
+          onClick={() =>
+            props.updateCard(
+              card.id,
+              window.prompt("New Front?"),
+              card.back,
+              card.confidence,
+              card.time,
+            )
+          }
+          style={{ marginBottom: "5px" }}
+        >
           {card.front}
         </button>
-        <button className="Card-editor">{card.back}</button>
+        <button
+          className="Card-editor"
+          onClick={() =>
+            props.updateCard(
+              card.id,
+              card.front,
+              window.prompt("New Back?"),
+              card.confidence,
+              card.time,
+            )
+          }
+        >
+          {card.back}
+        </button>
       </div>
     ))}
   </div>
