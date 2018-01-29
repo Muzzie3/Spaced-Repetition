@@ -1,4 +1,5 @@
 import React from "react";
+import CardEditor from "./CardEditor";
 
 const DeckSelection = props => (
   <div className="Deck-selection">
@@ -7,9 +8,7 @@ const DeckSelection = props => (
         <button onClick={() => props.getDeck(deck)}>{deck}</button>
       </div>
     ))}
-    <button onClick={() => props.createDeck(window.prompt("Deck name?"))}>
-      New deck
-    </button>
+    <CardEditor initialValue="New deck" submit={props.createDeck} />
   </div>
 );
 

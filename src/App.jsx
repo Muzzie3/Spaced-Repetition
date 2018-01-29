@@ -85,7 +85,7 @@ class App extends React.Component {
   render = () => (
     <div className="App">
       <header className="App-header">
-        <h1 className="App-title">Spaced Repetition</h1>
+        Spaced Repetition
       </header>
       {this.state.loading ? (
         "Loading..."

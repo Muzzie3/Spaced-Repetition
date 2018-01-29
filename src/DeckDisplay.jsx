@@ -1,10 +1,11 @@
 import React from "react";
+import CardEditor from "./CardEditor";
 
 const DeckDisplay = props => (
   <div>
     <button
       className="Green-button"
-      onClick={() => props.createCard(window.prompt("Front"), window.prompt("Back"))}
+      onClick={() => props.createCard("Front", "Back")}
     >
       Create new card
     </button>
@@ -19,34 +20,14 @@ const DeckDisplay = props => (
             Delete
           </button>
         </div>
-        <button
-          className="Card-editor"
-          onClick={() =>
-            props.updateCard(
-              card.id,
-              window.prompt("New Front?"),
-              card.back,
-              card.confidence,
-              card.time,
-            )
-          }
-        >
-          {card.front}
-        </button>
-        <button
-          className="Card-editor"
-          onClick={() =>
-            props.updateCard(
-              card.id,
-              card.front,
-              window.prompt("New Back?"),
-              card.confidence,
-              card.time,
-            )
-          }
-        >
-          {card.back}
-        </button>
+        <CardEditor
+          initialValue={card.front}
+          submit={value => props.updateCard(card.id, value, card.back, card.confidence, card.time)}
+        />
+        <CardEditor
+          initialValue={card.back}
+          submit={value => props.updateCard(card.id, card.front, value, card.confidence, card.time)}
+        />
       </div>
     ))}
   </div>

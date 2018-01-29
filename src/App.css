@@ -5,15 +5,11 @@
 
 .App-header {
   background-color: #222;
-  vertical-align: top;
   padding: 1% 0%;
   color: white;
   margin-bottom: 2%;
-}
-
-.App-title {
-  display: inline;
   font-size: 3em;
+  font-weight: bold;
 }
 
 .Display {
@@ -37,8 +33,15 @@
   overflow: hidden;
   padding: 20px 20px;
   color: #222;
-  font-size: large;
+  font-size: 1em;
   margin: 5px;
+  text-align: center;
+}
+
+@media (min-width: 1000px) {
+  div {
+    font-size: 2rem;
+  }
 }
 
 button.Card:hover {
@@ -50,6 +53,7 @@ button.Card:hover {
 button {
   padding: 15px 15px;
   border-radius: 20px;
+  font-size: 0.75em;
   background-color: lightblue;
 }
 
