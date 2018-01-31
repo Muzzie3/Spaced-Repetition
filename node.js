@@ -3,7 +3,7 @@ const mysql = require("mysql");
 const { dbInfo } = require("./URLparser");
 const { OAuth } = require("./OAuthValidator");
 
-const pool = mysql.createPool({ connectionLimit: 5, ...dbInfo });
+const pool = mysql.createPool({ connectionLimit: 3, ...dbInfo });
 
 express()
   .use((req, res, next) => {
@@ -24,8 +24,8 @@ express()
               req.params.deck.substr(0, 255),
               req.params.front,
               req.params.back,
-              1,
-              +new Date() / 1000,
+              0,
+              0,
             ],
           ],
           (err1) => {

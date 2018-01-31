@@ -1,4 +1,5 @@
 import React from "react";
+import ConfidenceTimeMap from "./ConfidenceTimeMap";
 
 class CardDisplay extends React.Component {
   static forceStudy = false;
@@ -8,13 +9,14 @@ class CardDisplay extends React.Component {
     forceStudy: CardDisplay.forceStudy && +new Date() / 1000 < this.props.card.time,
   };
 
-  updateCard = (confidence, time) => {
+  updateCard = (confidenceChange) => {
+    const newConfidence = Math.max(this.props.card.confidence + confidenceChange, 0);
     this.props.updateCard(
       this.props.card.id,
       this.props.card.front,
       this.props.card.back,
-      confidence,
-      time,
+      newConfidence,
+      (+new Date() + ConfidenceTimeMap(newConfidence)) / 1000,
     );
   };
 
@@ -40,34 +42,29 @@ class CardDisplay extends React.Component {
           <br /> I remember this... <br />
           <button
             className="Red-button"
-            onClick={() => Math.round(this.updateCard(1, (+new Date() + 10000) / 1000))}
+            onClick={() => this.updateCard(-Infinity)}
+          >
+            not at all
+          </button>
+          <button
+            className="Red-button"
+            style={{ margin: "1%" }}
+            onClick={() => this.updateCard(-2)}
           >
             poorly
           </button>
-          <button
-            className="Yellow-button"
-            style={{ margin: "1%" }}
-            onClick={() =>
-              this.updateCard(
-                this.props.card.confidence,
-                Math.round((+new Date() + 10000 * this.props.card.confidence ** 4) / 1000),
-              )
-            }
-          >
+          <button className="Yellow-button" onClick={() => this.updateCard(-1)}>
             somewhat
           </button>
           <button
             className="Green-button"
-            onClick={() =>
-              this.updateCard(
-                this.props.card.confidence + +!this.state.forceStudy,
-                Math.round((+new Date() +
-                    10000 * (this.props.card.confidence + +!this.state.forceStudy) ** 4) /
-                    1000),
-              )
-            }
+            style={{ margin: "1%" }}
+            onClick={() => this.updateCard(+!this.state.forceStudy)}
           >
-            well
+            pretty well
+          </button>
+          <button className="Green-button" onClick={() => this.updateCard(2 * +!this.state.forceStudy)}>
+            perfectly
           </button>
         </div>
       )}
