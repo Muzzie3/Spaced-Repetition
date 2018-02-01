@@ -1,22 +1,25 @@
 import React from "react";
-import ConfidenceTimeMap from "./ConfidenceTimeMap";
+import ConfidenceToTime from "./ConfidenceToTime";
 
 class CardDisplay extends React.Component {
   static forceStudy = false;
+  // static variable used to preserve value between renders
 
   state = {
     front: true,
     forceStudy: CardDisplay.forceStudy && +new Date() / 1000 < this.props.card.time,
+    // when forceStudy is true, user can study cards that the algorithm thinks don't need studying
   };
 
   updateCard = (confidenceChange) => {
+    // updates card confidence and next review time based on how well the user remembered it
     const newConfidence = Math.max(this.props.card.confidence + confidenceChange, 0);
     this.props.updateCard(
       this.props.card.id,
       this.props.card.front,
       this.props.card.back,
       newConfidence,
-      (+new Date() + ConfidenceTimeMap(newConfidence)) / 1000,
+      (+new Date() + (1000 * ConfidenceToTime(newConfidence))) / 1000,
     );
   };
 
