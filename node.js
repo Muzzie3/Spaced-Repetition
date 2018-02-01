@@ -1,6 +1,6 @@
 const express = require("express");
 const mysql = require("mysql");
-const { dbInfo } = require("./URLparser");
+const { dbInfo } = require("./dbInfo");
 const { OAuth } = require("./OAuthValidator");
 
 const pool = mysql.createPool({ connectionLimit: 3, ...dbInfo });
