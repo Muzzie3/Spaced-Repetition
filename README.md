@@ -26,7 +26,7 @@ Spaced Repetition is a flashcard review web app based on the technique of [Space
 
 ## Available Commands
 
-Note: You cannot run the server without a database URL and OAuth2 client secret, which I'm obviously not giving away. Instead of trying to get those, I suggest simply redirecting HTTP requests by changing ```proxy``` in the package.json to the Heroku server I have running at ```https://spaced-repetition-online.herokuapp.com```
+Note: You cannot run the server without a database URL and OAuth2 client secret, which I'm obviously not giving away. You will need to obtain those yourself, or you could instead simply redirect HTTP requests by changing ```proxy``` in package.json to the Heroku server I have running at ```https://spaced-repetition-online.herokuapp.com```
 
 In the project directory, you can run:
 
@@ -43,7 +43,7 @@ Pretty useless right now because there are no tests.
 ### `npm run dev`
 
 Runs the app in the development mode.<br> 
-Requires a server to be currently running, you can use mine as described above.<br>
+Requires a server to be currently running (you can use mine as described above).<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
 The page will reload if you make edits.<br>
