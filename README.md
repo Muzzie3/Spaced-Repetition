@@ -37,8 +37,7 @@ It correctly bundles React in production mode and optimizes the build for the be
 Used by Heroku.
 ### `npm test`
 
-Launches the test runner in the interactive watch mode.<br>
-Pretty useless right now because there are no tests.
+Launches the test runner (jest) in the interactive watch mode.<br>
 
 ### `npm run dev`
 
