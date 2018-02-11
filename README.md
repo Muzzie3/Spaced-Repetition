@@ -6,8 +6,11 @@ Spaced Repetition is a flashcard review web app based on the technique of [Space
 All the flashcard information is stored in the cloud, so you can review your flashcards wherever and whenever you have internet. It's a web app: just go to [the website](https://spaced-repetition-online.herokuapp.com) to review, no installation required!
 
 ## Usage
+First things first, sign in with Google.
 
-Click on "New Deck" to create a new "deck" of flashcards. The deck starts with a single placeholder card: press "View Deck" to create more. Once you have created the flashcards, click "Study" to start studying them. I recommend trying to study each deck once per day.
+To create your first "deck" of flashcards, click on "New Deck", type in the deck name, and hit enter. The deck starts with a single placeholder card: press "View Deck" to create more (you can edit flashcards by clicking on them). 
+
+Once you have created the flashcards you want, click "Study" to start studying them. I recommend trying to study each deck once per day: ideally, make it a routine!
 ## Database Schema
 
 The MySQL database being used contains a single table: ```cards```. This table was created with 
