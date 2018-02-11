@@ -3,11 +3,14 @@
 
 Spaced Repetition is a flashcard review web app based on the technique of [Spaced Repetition](https://en.wikipedia.org/wiki/Spaced_repetition), a scientifically proven method to memorize information. Use it to memorize everything from vocabulary to equations to historical dates!
 
- All the flashcard information is stored in the cloud, so you can review your flashcards wherever and whenever you have internet. It's a web app: just go to [the website](https://spaced-repetition-online.herokuapp.com) to review, no installation required!
+All the flashcard information is stored in the cloud, so you can review your flashcards wherever and whenever you have internet. It's a web app: just go to [the website](https://spaced-repetition-online.herokuapp.com) to review, no installation required!
 
- ## Database Schema
+## Usage
 
- The MySQL database being used contains a single table: ```cards```. This table was created with 
+Click on "New Deck" to create a new "deck" of flashcards. The deck starts with a single placeholder card: press "View Deck" to create more. Once you have created the flashcards, click "Study" to start studying them. I recommend trying to study each deck once per day.
+## Database Schema
+
+The MySQL database being used contains a single table: ```cards```. This table was created with 
  ~~~~
  CREATE TABLE cards (
 	id INT UNSIGNED AUTO_INCREMENT,
@@ -21,8 +24,8 @@ Spaced Repetition is a flashcard review web app based on the technique of [Space
   );
   ~~~~
 
-  Confidence is how confident the spaced repetition algorithm is that this card is memorized.<br>
-  Time is a timestamp of when this card should be reviewed next, measured in seconds since the UNIX epoch.
+Confidence is how confident the spaced repetition algorithm is that this card is memorized.<br>
+Time is a timestamp of when this card should be reviewed next, measured in seconds since the UNIX epoch.
 
 ## Available Commands
 

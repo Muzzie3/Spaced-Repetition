@@ -20,6 +20,8 @@
     "react/prop-types": "off",
     "no-plusplus": "off",
     "no-mixed-operators": "off",
+    "no-cond-assign": "off",
+    "global-require": "off",
     "no-return-assign": "off",
     "no-nested-ternary": "off",
     "no-empty": "warn"

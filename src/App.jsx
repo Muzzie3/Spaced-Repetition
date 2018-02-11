@@ -70,9 +70,7 @@ class App extends React.Component {
     const xhr = new XMLHttpRequest();
     xhr.open(
       "POST",
-      `${window.location.origin}/api/createCard/${deck}/placeholder/placeholder/${
-        this.state.idToken
-      }`,
+      `${window.location.origin}/api/createCard/${deck}/Front/Back/${this.state.idToken}`,
     );
     xhr.send();
     xhr.addEventListener("load", this.readDecks);
@@ -81,13 +79,11 @@ class App extends React.Component {
   // The create methods request the server to create data (duh)
   // They also reread the data from the server and update local state with it
 
-  createCard = (front, back) => {
+  createCard = () => {
     const xhr = new XMLHttpRequest();
     xhr.open(
       "POST",
-      `${window.location.origin}/api/createCard/${this.deck}/${front}/${back}/${
-        this.state.idToken
-      }`,
+      `${window.location.origin}/api/createCard/${this.deck}/Front/Back/${this.state.idToken}`,
     );
     xhr.send();
     xhr.addEventListener("load", this.readCards);
@@ -105,8 +101,7 @@ class App extends React.Component {
         "Loading..."
       ) : !this.state.idToken ? (
         <div className="g-signin2" data-theme="dark" data-onsuccess="signIn" />
-        // Google signin button
-      ) :
+      ) : // Google signin button
       this.state.cards.length ? (
         <Display
           back={() => this.setState({ cards: [] })}
@@ -118,9 +113,9 @@ class App extends React.Component {
           rereadCards={this.readCards}
           createCard={this.createCard}
         />
+      ) : (
         // Display: once the user selects a deck, this is shown
         // Most of the meat of this web app is in here
-      ) : (
         <DeckSelection
           decks={this.state.decks}
           createDeck={this.createDeck}

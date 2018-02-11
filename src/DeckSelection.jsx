@@ -8,7 +8,7 @@ const DeckSelection = props => (
         <button onClick={() => props.selectDeck(deck)}>{deck}</button>
       </div>
     ))}
-    <CardEditor initialValue="New deck" submit={props.createDeck} />
+    <CardEditor initialValue="New Deck" submit={props.createDeck} />
   </div>
 );
 

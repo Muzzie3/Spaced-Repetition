@@ -5,9 +5,9 @@ const DeckDisplay = props => (
   <div>
     <button
       className="Green-button"
-      onClick={() => props.createCard("Front", "Back")}
+      onClick={props.createCard}
     >
-      Create new card
+      New Card
     </button>
     <br />
     {props.cards.map(card => (
