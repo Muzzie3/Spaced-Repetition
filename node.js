@@ -9,7 +9,7 @@ express()
   .use((req, res, next) => {
     if (process.env.NODE_ENV === "production" && req.headers["x-forwarded-proto"] !== "https") {
       res.redirect(302, `https://${req.hostname}${req.originalUrl}`);
-      // Forces connections to be https, over http the card IDs can be stolen
+      // Forces connections to be https, over http the session and card IDs can be stolen
     } else {
       next();
     }
