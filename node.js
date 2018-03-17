@@ -33,7 +33,7 @@ express()
       req.session.userId = userId;
     });
   })
-  .post("/api/createCard/:deck/:front/:back/:user", (req, res) => {
+  .post("/api/createCard/:deck/:front/:back", (req, res) => {
     pool.getConnection((err0, connection) => {
       connection.query(
         "INSERT INTO `cards` (`user`, `deck`, `front`, `back`, `confidence`, `time`) VALUES (?)",
@@ -68,7 +68,7 @@ express()
       );
     });
   })
-  .get("/api/getDecks/:user", (req, res) => {
+  .get("/api/getDecks", (req, res) => {
     pool.getConnection((err0, connection) => {
       connection.query(
         "SELECT DISTINCT `deck` FROM `cards` WHERE `user`=?",
@@ -81,7 +81,7 @@ express()
       );
     });
   })
-  .get("/api/getCards/:deck/:user", (req, res) => {
+  .get("/api/getCards/:deck", (req, res) => {
     pool.getConnection((err0, connection) => {
       connection.query(
         "SELECT `id`, `front`, `back`, `confidence`, `time` FROM `cards` WHERE `user`=? AND `deck`=?",
