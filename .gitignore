@@ -17,7 +17,6 @@
 .env.test.local
 .env.production.local
 secrets.js
-package-lock.json
 
 npm-debug.log*
 yarn-debug.log*

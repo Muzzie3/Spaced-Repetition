@@ -5,5 +5,5 @@ const client = new OAuth2Client(
   "857722859858-btnq198t91ks85cs0gbvtkeckg8reha1.apps.googleusercontent.com",
   clientSecret,
 );
-module.exports.OAuth = (tokenString, callback) =>
+module.exports.Authorize = (tokenString, callback) =>
   client.verifyIdToken({ idToken: tokenString }, (err, login) => callback(login.getPayload().sub));
