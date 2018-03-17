@@ -1,10 +1,10 @@
-export default (token = null, action) => {
+export default (loggedIn = false, action) => {
   switch (action.type) {
     case "LOGIN":
-      return action.payload.token;
+      return true;
     case "LOGOUT":
-      return null;
+      return false;
     default:
-      return token;
+      return loggedIn;
   }
 };

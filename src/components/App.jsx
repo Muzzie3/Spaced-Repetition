@@ -1,16 +1,17 @@
 import React from "react";
+import { connect } from "react-redux";
 import DeckSelection from "./DeckSelection";
-import Display from "./Display";
+import OldDisplay from "./Display";
 
-class App extends React.Component {
+/* class OldApp extends React.Component {
   constructor() {
     super();
-    window.signIn = googleUser => this.signIn(googleUser);
+    window.signIn = this.signIn;
     // Hook into global scope cause I can't get the google signin button to work any other way
   }
 
   state = {
-    idToken: "",
+    loggedIn: false,
     loading: false,
     decks: [],
     cards: [],
@@ -25,7 +26,7 @@ class App extends React.Component {
   readDecks = () => {
     this.setState({ loading: true, decks: [] });
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", `${window.location.origin}/api/getDecks/${this.state.idToken}`);
+    xhr.open("GET", `${window.location.origin}/api/getDecks`);
     xhr.send();
     xhr.addEventListener("load", () => {
       if (xhr.status === 200) {
@@ -41,7 +42,7 @@ class App extends React.Component {
   // NOT PURE FUNCTIONS: rely on current state
 
   readCards = () => {
-    /*
+    / *
       this.state.cards is an array of card objects in the currently selected deck
       front = front text
       back = back text
@@ -49,10 +50,10 @@ class App extends React.Component {
       time = the next time the user should study this card
       time is stored as seconds from the UNIX epoch, but JS measures in milliseconds
       so there's a lot of conversions dealing with that
-    */
+    * /
     this.setState({ loading: true, cards: [] });
     const xhr = new XMLHttpRequest();
-    xhr.open("GET", `${window.location.origin}/api/getCards/${this.deck}/${this.state.idToken}`);
+    xhr.open("GET", `${window.location.origin}/api/getCards/${this.deck}`);
     xhr.send();
     xhr.addEventListener("load", () => {
       if (xhr.status === 200) {
@@ -70,7 +71,7 @@ class App extends React.Component {
     const xhr = new XMLHttpRequest();
     xhr.open(
       "POST",
-      `${window.location.origin}/api/createCard/${deck}/Front/Back/${this.state.idToken}`,
+      `${window.location.origin}/api/createCard/${deck}/Front/Back`,
     );
     xhr.send();
     xhr.addEventListener("load", this.readDecks);
@@ -83,15 +84,21 @@ class App extends React.Component {
     const xhr = new XMLHttpRequest();
     xhr.open(
       "POST",
-      `${window.location.origin}/api/createCard/${this.deck}/Front/Back/${this.state.idToken}`,
+      `${window.location.origin}/api/createCard/${this.deck}/Front/Back`,
     );
     xhr.send();
     xhr.addEventListener("load", this.readCards);
   };
 
   signIn = (googleUser) => {
-    this.setState({ idToken: googleUser.getAuthResponse().id_token });
-    this.readDecks();
+    const xhr = new XMLHttpRequest();
+    xhr.open(
+      "POST",
+      `${window.location.origin}/api/login/${googleUser.getAuthResponse().id_token}`,
+    );
+    xhr.send();
+    xhr.addEventListener("load", this.readDecks);
+    xhr.addEventListener("load", () => this.setState({ loggedIn: true }));
   };
 
   render = () => (
@@ -99,35 +106,113 @@ class App extends React.Component {
       <header className="App-header">Spaced Repetition</header>
       {this.state.loading ? (
         "Loading..."
-      ) : !this.state.idToken ? (
+      ) : !this.state.loggedIn ? (
         <div className="g-signin2" data-theme="dark" data-onsuccess="signIn" />
       ) : // Google signin button
-      this.state.cards.length ? (
-        <Display
-          back={() => this.setState({ cards: [] })}
-          cards={this.state.cards}
-          rereadAll={() => {
-            this.readDecks();
-            this.readCards();
-          }}
-          rereadCards={this.readCards}
-          createCard={this.createCard}
-        />
-      ) : (
-        // Display: once the user selects a deck, this is shown
-        // Most of the meat of this web app is in here
-        <DeckSelection
-          decks={this.state.decks}
-          createDeck={this.createDeck}
-          selectDeck={(deck) => {
-            this.deck = deck;
-            this.readCards();
-          }}
-        />
-        // Deck selection: user can view all decks, create new decks, or select a deck
-      )}
+          this.state.cards.length ? (
+            <Display
+              back={() => this.setState({ cards: [] })}
+              cards={this.state.cards}
+              rereadAll={() => {
+                this.readDecks();
+                this.readCards();
+              }}
+              rereadCards={this.readCards}
+              createCard={this.createCard}
+            />
+          ) : (<DeckSelection
+            decks={this.state.decks}
+            createDeck={this.createDeck}
+            selectDeck={(deck) => {
+              this.deck = deck;
+              this.readCards();
+            }}
+          />)
+      }
     </div>
   );
 }
 
-export default App;
+export { OldApp }; */
+
+const mapStateToProps = ({
+  loggedIn,
+  loading,
+  decks,
+  cards,
+  currentDeck,
+}) => ({
+  loggedIn,
+  loading,
+  decks,
+  cards,
+  currentDeck,
+});
+
+const App = (props) => {
+  const getDecks = () => {
+    props.dispatch({ type: "LOADING" });
+    fetch("api/getDecks", { credentials: "same-origin" })
+      .then(resp => resp.json())
+      .then((resp) => {
+        props.dispatch({ type: "UPDATE_DECKS", payload: { decks: resp.results.map(obj => obj.deck) } });
+        props.dispatch({ type: "READY" });
+      });
+  };
+  const getCards = (deck = props.currentDeck) => {
+    props.dispatch({ type: "LOADING" });
+    props.dispatch({ type: "UPDATE_CARDS", payload: { cards: [] } });
+    fetch(`api/getCards/${deck}`, { credentials: "same-origin" })
+      .then(resp => resp.json())
+      .then((resp) => {
+        props.dispatch({ type: "UPDATE_CARDS", payload: { cards: resp.results.sort((a, b) => a.time - b.time) } });
+        props.dispatch({ type: "READY" });
+      });
+  };
+  const createCard = (deck = props.currentDeck) => {
+    props.dispatch({ type: "LOADING" });
+    fetch(`api/createCard/${deck}/Front/Back`, { credentials: "same-origin", method: "POST" })
+      .then(getDecks)
+      .then(getCards);
+  };
+  window.signIn = (googleUser) => {
+    fetch(
+      `api/login/${googleUser.getAuthResponse().id_token}`,
+      { credentials: "same-origin", method: "POST" },
+    ).then(() => {
+      props.dispatch({ type: "LOGIN" });
+      getDecks();
+    });
+  };
+  return (
+    <div className="App">
+      <header className="App-header">Spaced Repetition</header>
+      {props.loading ? (
+        "Loading..."
+      ) : !props.loggedIn ? (
+        <div className="g-signin2" data-theme="dark" data-onsuccess="signIn" />
+      ) : // Google signin button
+          props.cards.length ? (
+            <OldDisplay
+              back={() => props.dispatch({ type: "UPDATE_CARDS", payload: { cards: [] } })}
+              cards={props.cards}
+              getAll={() => {
+                getDecks();
+                getCards();
+              }}
+              getCards={getCards}
+              createCard={() => createCard()}
+            />
+          ) : (<DeckSelection
+            decks={props.decks}
+            createDeck={createCard}
+            selectDeck={(newDeck) => {
+              props.dispatch({ type: "SELECT_DECK", payload: { deckName: newDeck } });
+              getCards(newDeck);
+            }}
+          />)
+      }
+    </div>);
+};
+
+export default connect(mapStateToProps)(App);

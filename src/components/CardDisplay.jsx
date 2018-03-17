@@ -2,12 +2,9 @@ import React from "react";
 import ConfidenceToTime from "./ConfidenceToTime";
 
 class CardDisplay extends React.Component {
-  static forceStudy = false;
-  // static variable used to preserve value between renders
-
   state = {
     front: true,
-    forceStudy: CardDisplay.forceStudy && +new Date() / 1000 < this.props.card.time,
+    forceStudy: this.props.forceStudy && +new Date() / 1000 < this.props.card.time,
     // when forceStudy is true, user can study cards that the algorithm thinks don't need studying
   };
 
@@ -25,15 +22,12 @@ class CardDisplay extends React.Component {
 
   flip = () => this.setState({ front: false });
 
-  flipForceStudy = () =>
-    this.setState({ forceStudy: (CardDisplay.forceStudy = !CardDisplay.forceStudy) });
-
   render = () => (
     <div>
       {+new Date() / 1000 < this.props.card.time && !this.state.forceStudy ? (
         <div>
           <div style={{ marginBottom: "40px" }}>No studying currently required</div>
-          <button onClick={this.flipForceStudy}>Study anyway (not recommended)</button>
+          <button onClick={this.props.flipForceStudy}>Study anyway (not recommended)</button>
         </div>
       ) : this.state.front ? (
         <button className="Card" onClick={this.flip}>
@@ -74,7 +68,7 @@ class CardDisplay extends React.Component {
       {this.state.forceStudy ? (
         <div>
           <br />
-          <button onClick={this.flipForceStudy}>Back to normal studying routine</button>
+          <button onClick={this.props.flipForceStudy}>Back to normal studying routine</button>
         </div>
       ) : (
         <div />

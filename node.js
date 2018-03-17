@@ -28,9 +28,10 @@ express()
     secret: sessionSecret,
     store: sessionStore,
   }))
-  .post("/api/login/:token", (req) => {
+  .post("/api/login/:token", (req, res) => {
     Authenticate(req.params.token, (userId) => {
       req.session.userId = userId;
+      res.status(201).send();
     });
   })
   .post("/api/createCard/:deck/:front/:back", (req, res) => {
@@ -55,7 +56,7 @@ express()
       );
     });
   })
-  .patch("/api/updateCard/:id/:front/:back/:confidence/:time", (req, res) => {
+  .put("/api/updateCard/:id/:front/:back/:confidence/:time", (req, res) => {
     pool.getConnection((err0, connection) => {
       connection.query(
         "UPDATE `cards` SET `front`=?, `back`=?, `confidence`=?, `time`=? WHERE `id`=?",
