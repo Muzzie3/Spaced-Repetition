@@ -2,11 +2,7 @@ import React from "react";
 import ConfidenceToTime from "./ConfidenceToTime";
 
 class CardDisplay extends React.Component {
-  state = {
-    front: true,
-    forceStudy: this.props.forceStudy && +new Date() / 1000 < this.props.card.time,
-    // when forceStudy is true, user can study cards that the algorithm thinks don't need studying
-  };
+  state = { front: true };
 
   updateCard = (confidenceChange) => {
     // updates card confidence and next review time based on how well the user remembered it
@@ -22,59 +18,60 @@ class CardDisplay extends React.Component {
 
   flip = () => this.setState({ front: false });
 
-  render = () => (
-    <div>
-      {+new Date() / 1000 < this.props.card.time && !this.state.forceStudy ? (
-        <div>
-          <div style={{ marginBottom: "40px" }}>No studying currently required</div>
-          <button onClick={this.props.flipForceStudy}>Study anyway (not recommended)</button>
-        </div>
-      ) : this.state.front ? (
-        <button className="Card" onClick={this.flip}>
-          <div>{this.props.card.front}</div>
-        </button>
-      ) : (
-        <div>
-          <div className="Card">{this.props.card.back}</div>
-          <br /> I remember this... <br />
-          <button
-            className="Red-button"
-            onClick={() => this.updateCard(-Infinity)}
-          >
-            not at all
+  render = () => {
+    const forceStudy = this.props.forceStudy && +new Date() / 1000 < this.props.card.time;
+    return (
+      <div>
+        {+new Date() / 1000 < this.props.card.time && !forceStudy ? (
+          <div>
+            <div style={{ marginBottom: "40px" }}>No studying currently required</div>
+            <button onClick={this.props.flipForceStudy}>Study anyway (not recommended)</button>
+          </div>
+        ) : this.state.front ? (
+          <button className="Card" onClick={this.flip}>
+            <div>{this.props.card.front}</div>
           </button>
-          <button
-            className="Red-button"
-            style={{ margin: "1%" }}
-            onClick={() => this.updateCard(-2)}
-          >
-            poorly
-          </button>
-          <button className="Yellow-button" onClick={() => this.updateCard(-1)}>
-            somewhat
-          </button>
-          <button
-            className="Green-button"
-            style={{ margin: "1%" }}
-            onClick={() => this.updateCard(+!this.state.forceStudy)}
-          >
-            pretty well
-          </button>
-          <button className="Green-button" onClick={() => this.updateCard(2 * +!this.state.forceStudy)}>
-            perfectly
-          </button>
-        </div>
-      )}
-      {this.state.forceStudy ? (
-        <div>
-          <br />
-          <button onClick={this.props.flipForceStudy}>Back to normal studying routine</button>
-        </div>
-      ) : (
-        <div />
-      )}
-    </div>
-  );
+        ) : (
+          <div>
+            <div className="Card">{this.props.card.back}</div>
+            <br /> I remember this... <br />
+            <button
+              className="Red-button"
+              onClick={() => this.updateCard(-Infinity)}
+            >
+              not at all
+            </button>
+            <button
+              className="Red-button"
+              style={{ margin: "1%" }}
+              onClick={() => this.updateCard(-2)}
+            >
+              poorly
+            </button>
+            <button className="Yellow-button" onClick={() => this.updateCard(-1)}>
+              somewhat
+            </button>
+            <button
+              className="Green-button"
+              style={{ margin: "1%" }}
+              onClick={() => this.updateCard(+!forceStudy)}
+            >
+              pretty well
+            </button>
+            <button className="Green-button" onClick={() => this.updateCard(2 * +!forceStudy)}>
+              perfectly
+            </button>
+          </div>)}
+        {forceStudy ? (
+          <div>
+            <br />
+            <button onClick={this.props.flipForceStudy}>Back to normal studying routine</button>
+          </div>
+        ) : (<div />)
+        }
+      </div>
+    );
+  };
 }
 
 export default CardDisplay;
