@@ -212,7 +212,7 @@ const App = (props) => {
             }}
           />)
       }
-      <a href="./guide.html" style={{ margin: "20px" }}>Guide</a>
+      <a href="./guide.html" style={{ margin: "20px", display: "block" }}>Guide</a>
     </div>);
 };
 
