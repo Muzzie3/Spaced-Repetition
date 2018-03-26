@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import DeckSelection from "./DeckSelection";
-import OldDisplay from "./Display";
+import Display from "./Display";
 
 /* class OldApp extends React.Component {
   constructor() {
@@ -193,7 +193,7 @@ const App = (props) => {
         <div className="g-signin2" data-theme="dark" data-onsuccess="signIn" />
       ) : // Google signin button
           props.cards.length ? (
-            <OldDisplay
+            <Display
               back={() => props.dispatch({ type: "UPDATE_CARDS", payload: { cards: [] } })}
               cards={props.cards}
               getAll={() => {
@@ -212,6 +212,7 @@ const App = (props) => {
             }}
           />)
       }
+      <a href="./guide.html" style={{ margin: "20px" }}>Guide</a>
     </div>);
 };
 
