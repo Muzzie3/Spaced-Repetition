@@ -4,7 +4,7 @@ const MySQLStore = require("express-mysql-session")(session);
 const MySQL = require("mysql");
 const { dbInfo } = require("./dbInfo");
 const { Authenticate } = require("./Authenticator");
-const { sessionSecret } = require("./secrets");
+const { sessionSecret } = process.env.SESSION_SECRET || require("./secrets");
 
 const pool = MySQL.createPool({ connectionLimit: 4, ...dbInfo });
 const sessionStore = new MySQLStore({}, pool);
