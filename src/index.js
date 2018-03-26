@@ -6,8 +6,6 @@ import Reducers from "./reducers/CombinedReducers";
 import "./style/index.css";
 import "./style/App.css";
 import Root from "./components/App";
-import registerServiceWorker from "./registerServiceWorker";
-
 
 ReactDOM.render(
   React.createElement(
@@ -17,4 +15,3 @@ ReactDOM.render(
   ),
   document.getElementById("root"),
 );
-registerServiceWorker();
