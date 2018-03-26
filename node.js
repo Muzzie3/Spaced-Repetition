@@ -20,7 +20,7 @@ express()
   })
   .use(session({
     cookie: {
-      sameSite: false,
+      sameSite: true,
       secure: false,
     },
     resave: false,
