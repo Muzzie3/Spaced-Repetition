@@ -20,8 +20,8 @@ express()
   })
   .use(session({
     cookie: {
-      sameSite: true,
-      secure: process.env.NODE_ENV === "production",
+      sameSite: false,
+      secure: false,
     },
     resave: false,
     saveUninitialized: false,
