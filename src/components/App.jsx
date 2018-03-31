@@ -54,7 +54,10 @@ const App = (props) => {
   };
   return (
     <div className="App">
-      <header className="App-header">Spaced Repetition</header>
+      <header className="App-header">
+        Spaced Repetition
+        <a href="./guide.html" style={{ display: "block", color: "white", fontSize: "2rem" }}>Readme</a>
+      </header>
       {props.loading ? (
         "Loading..."
       ) : !props.loggedIn ? (
@@ -80,7 +83,6 @@ const App = (props) => {
             }}
           />)
       }
-      <a href="./guide.html" style={{ margin: "20px", display: "block" }}>Guide</a>
     </div>);
 };
 
