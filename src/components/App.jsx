@@ -56,7 +56,7 @@ const App = (props) => {
     <div className="App">
       <header className="App-header">
         Spaced Repetition
-        <a href="./guide.html" style={{ display: "block", color: "white", fontSize: "2rem" }}>Readme</a>
+        <a href="./guide.html" style={{ display: "block", color: "white", fontSize: "2rem" }}>Read me</a>
       </header>
       {props.loading ? (
         "Loading..."
